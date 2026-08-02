@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>كافتيريا حلم القهوة | طلب سريع</title>
+    <title>كافتيريا حلم القهوة | طلب ممتع</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
 
@@ -11,176 +11,287 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            user-select: none; /* منع تحديد النصوص أثناء السحب */
+            user-select: none; 
             -webkit-user-select: none;
             font-family: 'Cairo', sans-serif;
+            touch-action: manipulation;
         }
 
         body {
-            background-color: #0f172a; /* لون داكن عصري */
-            color: #f8fafc;
+            /* خلفية مبهجة ومشرقة */
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-color: #f8fafc;
+            color: #334155;
             overflow-x: hidden;
-            /* منع التحديث عند السحب لأسفل في الموبايل */
             overscroll-behavior-y: contain; 
-            padding-bottom: 140px; /* مساحة للسلة */
+            padding-bottom: 180px; /* مساحة أكبر للسلة الجديدة */
+            position: relative;
         }
+
+        /* دوائر الألوان في الخلفية (تصميم عصري) */
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            opacity: 0.6;
+        }
+        .blob-1 { top: -50px; left: -50px; width: 200px; height: 200px; background: #ff9a9e; }
+        .blob-2 { top: 40%; right: -50px; width: 250px; height: 250px; background: #fecfef; }
+        .blob-3 { bottom: 100px; left: 20px; width: 150px; height: 150px; background: #a1c4fd; }
 
         header {
             text-align: center;
-            padding: 20px;
-            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            padding: 15px;
             font-weight: 900;
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             position: sticky;
             top: 0;
             z-index: 10;
-            background-color: rgba(15, 23, 42, 0.9);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            color: #4f46e5;
         }
 
-        /* شبكة المنتجات اللانهائية */
+        header span {
+            font-size: 0.9rem;
+            color: #64748b;
+            display: block;
+            font-weight: 700;
+        }
+
+        /* شبكة المنتجات الأنيقة */
         .products-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
             gap: 15px;
             padding: 20px;
         }
 
         .product-card {
-            background-color: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 20px;
-            width: 100px;
-            height: 120px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #ffffff;
+            border-radius: 25px;
+            height: 130px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            touch-action: none; /* مهم جداً للسحب باللمس */
+            touch-action: none; 
             cursor: grab;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* لون خفيف أعلى كل بطاقة */
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 5px;
+            background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
         }
 
         .product-card:active {
-            transform: scale(0.95);
-            cursor: grabbing;
+            transform: scale(0.92) rotate(-2deg);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
         .product-icon {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 5px;
             pointer-events: none;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1));
         }
 
         .product-name {
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.8rem;
+            font-weight: 900;
+            color: #1e293b;
             pointer-events: none;
         }
 
         .product-price {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: #10b981;
+            font-weight: 700;
+            background: #d1fae5;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-top: 5px;
             pointer-events: none;
         }
 
-        /* العنصر المستنسخ أثناء السحب */
         .dragging-clone {
             position: fixed;
             pointer-events: none;
             z-index: 1000;
-            opacity: 0.9;
-            transform: scale(1.1);
-            transition: none;
+            transform: scale(1.15) rotate(5deg);
+            opacity: 0.95;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transition: none !important;
         }
 
-        /* السلة الزجاجية في الأسفل */
+        /* ----- تصميم السلة الجديد ----- */
         .basket-container {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 2px solid rgba(255, 255, 255, 1);
+            border-radius: 35px 35px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
             z-index: 50;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: all 0.3s ease;
+            padding: 15px 20px 25px 20px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .basket-container.drag-over {
-            background: rgba(16, 185, 129, 0.2);
-            border-color: #10b981;
-            transform: translateX(-50%) scale(1.05);
+            background: rgba(240, 253, 244, 0.95);
+            border-top: 3px solid #10b981;
+            padding-bottom: 40px; /* تمدد السلة عند اقتراب المنتج */
         }
 
-        .basket-info {
+        .basket-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 10px;
         }
 
         .basket-title {
             font-size: 1.2rem;
             font-weight: 900;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .basket-total {
-            color: #10b981;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .basket-items-count {
-            background: #3b82f6;
+            background: #4f46e5;
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.9rem;
+            font-weight: 900;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
         }
 
-        /* تأثير الاهتزاز عند الإضافة */
-        @keyframes pop {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.1); }
-            100% { transform: translateX(-50%) scale(1); }
+        /* مساحة عرض المنتجات داخل السلة */
+        .basket-items-display {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            min-height: 60px;
+            padding: 10px 5px;
+            scroll-behavior: smooth;
         }
-        .pop-anim {
-            animation: pop 0.3s ease;
+        
+        .basket-items-display::-webkit-scrollbar {
+            display: none; /* إخفاء شريط التمرير */
+        }
+
+        .basket-empty-msg {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin: auto;
+        }
+
+        /* المنتجات المصغرة داخل السلة */
+        .mini-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            min-width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* علامة الحذف الصغيرة على المنتج بالسلة */
+        .mini-item::after {
+            content: '×';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .mini-item:hover::after {
+            opacity: 1;
+        }
+
+        /* حركات الأنميشن */
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        @keyframes popOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) translateY(-50px); opacity: 0; }
+        }
+        .pop-out {
+            animation: popOut 0.3s forwards;
         }
     </style>
 </head>
 <body>
 
-    <header>اختار واسحب للسلة 🛒</header>
+    <!-- ألوان الخلفية -->
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+
+    <header>
+        كافتيريا حلم القهوة ☕
+        <span>اسحب منتجاتك المفضلة إلى السلة</span>
+    </header>
 
     <div class="products-grid" id="products-grid">
-        <!-- سيتم حقن المنتجات هنا عبر الجافاسكربت -->
+        <!-- سيتم إضافة المنتجات هنا -->
     </div>
 
+    <!-- السلة الجديدة -->
     <div class="basket-container" id="basket">
-        <div class="basket-info">
-            <span class="basket-title">سلتك</span>
-            <span class="basket-total" id="total-price">0.00 دينار</span>
+        <div class="basket-header">
+            <div class="basket-title">🛒 سلتك <span id="items-count" style="font-size:0.8rem; color:#64748b;">(0)</span></div>
+            <div class="basket-total" id="total-price">0.00 د.أ</div>
         </div>
-        <div class="basket-items-count" id="items-count">0 منتج</div>
+        <!-- هنا ستظهر المنتجات التي تسحبها -->
+        <div class="basket-items-display" id="basket-items">
+            <span class="basket-empty-msg" id="empty-msg">السلة فارغة، اسحب منتجاً هنا!</span>
+        </div>
     </div>
 
     <script>
-        // قاعدة بيانات المنتجات (الأسعار افتراضية للتجربة)
         const products = [
             { id: 'ameed', name: 'قهوة عميد', price: 1.00, icon: '☕' },
             { id: 'nescafe', name: 'نسكافيه', price: 0.50, icon: '☕' },
@@ -206,20 +317,33 @@
 
         const grid = document.getElementById('products-grid');
         const basket = document.getElementById('basket');
+        const basketItemsContainer = document.getElementById('basket-items');
+        const emptyMsg = document.getElementById('empty-msg');
         const totalPriceEl = document.getElementById('total-price');
         const itemsCountEl = document.getElementById('items-count');
 
         let cartTotal = 0;
         let cartItemsCount = 0;
 
-        // دالة لإنشاء بطاقة المنتج (لا تنفد أبداً، كلما سحبت واحدة تبقى الأصلية)
+        function updateBasketUI() {
+            totalPriceEl.textContent = `${cartTotal.toFixed(2)} د.أ`;
+            itemsCountEl.textContent = `(${cartItemsCount})`;
+            
+            if (cartItemsCount > 0) {
+                emptyMsg.style.display = 'none';
+            } else {
+                emptyMsg.style.display = 'block';
+            }
+        }
+
+        // إنشاء بطاقات المنتجات
         function renderProducts(times = 2) {
-            // تكرار المنتجات لجعل الصفحة تبدو أطول (لا نهائية)
             for(let i=0; i<times; i++) {
                 products.forEach(product => {
                     const card = document.createElement('div');
                     card.className = 'product-card';
                     card.dataset.price = product.price;
+                    card.dataset.icon = product.icon;
                     
                     card.innerHTML = `
                         <div class="product-icon">${product.icon}</div>
@@ -233,18 +357,16 @@
             }
         }
 
-        // نظام السحب الخاص بالهواتف (Pointer Events)
+        // نظام السحب الخاص
         function setupDrag(element) {
             let clone = null;
             let startX, startY;
 
             element.addEventListener('pointerdown', (e) => {
-                // إنشاء نسخة من العنصر تتحرك مع الإصبع
                 const rect = element.getBoundingClientRect();
                 clone = element.cloneNode(true);
                 clone.classList.add('dragging-clone');
                 
-                // تحديد مكان النسخة بناءً على لمسة المستخدم
                 clone.style.left = `${rect.left}px`;
                 clone.style.top = `${rect.top}px`;
                 clone.style.width = `${rect.width}px`;
@@ -255,17 +377,15 @@
                 startX = e.clientX - rect.left;
                 startY = e.clientY - rect.top;
 
-                element.style.opacity = '0.5'; // تبهيت العنصر الأصلي دلالة على سحبه
+                element.style.opacity = '0.3';
             });
 
             document.addEventListener('pointermove', (e) => {
                 if (!clone) return;
                 
-                // تحريك النسخة مع الإصبع
                 clone.style.left = `${e.clientX - startX}px`;
                 clone.style.top = `${e.clientY - startY}px`;
 
-                // التحقق مما إذا كان الإصبع فوق السلة
                 const basketRect = basket.getBoundingClientRect();
                 if (
                     e.clientX >= basketRect.left &&
@@ -284,34 +404,48 @@
                 
                 const basketRect = basket.getBoundingClientRect();
                 
-                // إذا تم الإفلات داخل السلة
                 if (
                     e.clientX >= basketRect.left &&
                     e.clientX <= basketRect.right &&
                     e.clientY >= basketRect.top &&
                     e.clientY <= basketRect.bottom
                 ) {
-                    // إضافة السعر
+                    // إضافة المنتج للسلة
                     const price = parseFloat(element.dataset.price);
+                    const icon = element.dataset.icon;
+                    
                     cartTotal += price;
                     cartItemsCount++;
+                    updateBasketUI();
+
+                    // إنشاء المنتج المصغر داخل السلة
+                    const miniItem = document.createElement('div');
+                    miniItem.className = 'mini-item';
+                    miniItem.innerHTML = icon;
                     
-                    totalPriceEl.textContent = `${cartTotal.toFixed(2)} دينار`;
-                    itemsCountEl.textContent = `${cartItemsCount} منتج`;
+                    // دالة إزالة المنتج عند الضغط عليه
+                    miniItem.addEventListener('click', function() {
+                        cartTotal -= price;
+                        cartItemsCount--;
+                        updateBasketUI();
+                        
+                        // تأثير الحذف
+                        this.classList.add('pop-out');
+                        setTimeout(() => {
+                            this.remove();
+                        }, 300);
+                        
+                        if(navigator.vibrate) navigator.vibrate(20);
+                    });
 
-                    // تأثير بصري للسلة
-                    basket.classList.remove('drag-over');
-                    basket.classList.remove('pop-anim');
-                    void basket.offsetWidth; // Trigger reflow
-                    basket.classList.add('pop-anim');
+                    basketItemsContainer.appendChild(miniItem);
+                    
+                    // تحريك السلة لليمين لتظهر أحدث المنتجات المضافة
+                    basketItemsContainer.scrollLeft = basketItemsContainer.scrollWidth;
 
-                    // اهتزاز الهاتف الخفيف إذا كان مدعوماً (Haptic Feedback)
-                    if (navigator.vibrate) {
-                        navigator.vibrate(50);
-                    }
+                    if (navigator.vibrate) navigator.vibrate(50);
                 }
 
-                // تنظيف بعد الإفلات
                 clone.remove();
                 clone = null;
                 element.style.opacity = '1';
@@ -319,8 +453,7 @@
             });
         }
 
-        // رسم المنتجات في البداية
-        renderProducts(3); // تكرار القائمة 3 مرات لإنشاء سكرول ممتاز
+        renderProducts(3); 
     </script>
 </body>
 </html>
